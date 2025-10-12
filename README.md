@@ -27,7 +27,7 @@ The platform is powered by an Agentic AI system designed to drastically reduce r
 6. **Web Intelligence Agent**: Real-time scientific and regulatory research
 7. **Report Generator Agent**: Professional report creation
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 PharmaShe/
@@ -71,7 +71,7 @@ PharmaShe/
    - Backend API: http://localhost:8000
    - API Docs: http://localhost:8000/docs
 
-## 🔧 Development
+## Development
 
 ### Backend (FastAPI)
 ```bash
