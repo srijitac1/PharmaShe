@@ -9,7 +9,7 @@ from typing import List, Optional
 from app.core.config import settings
 from app.core.database import get_db, engine
 from app.models import models
-from app.api import agents, research, reports, auth
+from app.api import agents, research, reports, auth, external_apis
 from app.services.master_agent import MasterAgent
 
 # Create database tables
@@ -43,6 +43,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(agents.router, prefix="/api/agents", tags=["AI Agents"])
 app.include_router(research.router, prefix="/api/research", tags=["Research"])
 app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
+app.include_router(external_apis.router, prefix="/api/external", tags=["External APIs"])
 
 @app.get("/")
 async def root():

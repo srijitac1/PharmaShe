@@ -5,6 +5,7 @@ import random
 from datetime import datetime, timedelta
 
 from .base_agent import BaseAgent
+from ..external_apis import ClinicalTrialsAPI
 
 class ClinicalTrialsAgent(BaseAgent):
     """
@@ -14,6 +15,7 @@ class ClinicalTrialsAgent(BaseAgent):
     def __init__(self):
         super().__init__("clinical_trials")
         self.description = "Monitors clinical development pipeline and trial activity"
+        self.clinical_trials_api = ClinicalTrialsAPI()
     
     async def process_query(self, query: str, db: Session) -> Dict[str, Any]:
         """
@@ -46,39 +48,101 @@ class ClinicalTrialsAgent(BaseAgent):
     
     async def _analyze_trial_pipeline(self, keywords: List[str], db: Session) -> Dict[str, Any]:
         """
-        Analyze the clinical trial pipeline
+        Analyze the clinical trial pipeline using real API data
         """
-        # Simulate clinical trial analysis
-        pipeline = {
-            "total_trials": random.randint(200, 2000),
-            "active_trials": random.randint(100, 1000),
-            "completed_trials": random.randint(50, 500),
-            "recruiting_trials": random.randint(30, 300),
-            "trial_status_distribution": {
-                "recruiting": random.randint(20, 200),
-                "active_not_recruiting": random.randint(15, 150),
-                "completed": random.randint(30, 300),
-                "terminated": random.randint(5, 50),
-                "suspended": random.randint(2, 20),
-                "withdrawn": random.randint(3, 30)
-            },
-            "therapeutic_areas": {
-                "breast_cancer": random.randint(50, 500),
-                "ovarian_cancer": random.randint(30, 300),
-                "cervical_cancer": random.randint(20, 200),
-                "endometrial_cancer": random.randint(15, 150),
-                "other_gynecological": random.randint(25, 250)
-            },
-            "intervention_types": {
-                "drug": random.randint(100, 1000),
-                "biological": random.randint(50, 500),
-                "device": random.randint(20, 200),
-                "procedure": random.randint(30, 300),
-                "behavioral": random.randint(10, 100)
+        try:
+            # Determine search terms based on keywords
+            search_condition = None
+            if any(kw in keywords for kw in ["breast", "cancer"]):
+                search_condition = "breast cancer"
+            elif any(kw in keywords for kw in ["ovarian", "cancer"]):
+                search_condition = "ovarian cancer"
+            elif any(kw in keywords for kw in ["cervical", "cancer"]):
+                search_condition = "cervical cancer"
+            elif any(kw in keywords for kw in ["endometrial", "cancer"]):
+                search_condition = "endometrial cancer"
+            else:
+                search_condition = "cancer"
+            
+            # Get real trial data
+            trials_data = await self.clinical_trials_api.search_trials(
+                condition=search_condition,
+                limit=100
+            )
+            
+            trials = trials_data.get("trials", [])
+            
+            # Analyze trial status distribution
+            status_distribution = {}
+            for trial in trials:
+                status = trial.get("status", "Unknown")
+                status_distribution[status] = status_distribution.get(status, 0) + 1
+            
+            # Analyze therapeutic areas
+            therapeutic_areas = {}
+            for trial in trials:
+                conditions = trial.get("conditions", [])
+                for condition in conditions:
+                    if "breast" in condition.lower():
+                        therapeutic_areas["breast_cancer"] = therapeutic_areas.get("breast_cancer", 0) + 1
+                    elif "ovarian" in condition.lower():
+                        therapeutic_areas["ovarian_cancer"] = therapeutic_areas.get("ovarian_cancer", 0) + 1
+                    elif "cervical" in condition.lower():
+                        therapeutic_areas["cervical_cancer"] = therapeutic_areas.get("cervical_cancer", 0) + 1
+                    elif "endometrial" in condition.lower():
+                        therapeutic_areas["endometrial_cancer"] = therapeutic_areas.get("endometrial_cancer", 0) + 1
+            
+            pipeline = {
+                "total_trials": len(trials),
+                "active_trials": len([t for t in trials if t.get("status") in ["Recruiting", "Active, not recruiting"]]),
+                "completed_trials": len([t for t in trials if t.get("status") == "Completed"]),
+                "recruiting_trials": len([t for t in trials if t.get("status") == "Recruiting"]),
+                "trial_status_distribution": status_distribution,
+                "therapeutic_areas": therapeutic_areas,
+                "intervention_types": {
+                    "drug": len([t for t in trials if "drug" in str(t.get("interventions", [])).lower()]),
+                    "biological": len([t for t in trials if "biological" in str(t.get("interventions", [])).lower()]),
+                    "device": len([t for t in trials if "device" in str(t.get("interventions", [])).lower()]),
+                    "procedure": len([t for t in trials if "procedure" in str(t.get("interventions", [])).lower()])
+                },
+                "data_source": "ClinicalTrials.gov API",
+                "last_updated": datetime.now().isoformat()
             }
-        }
-        
-        return pipeline
+            
+            return pipeline
+            
+        except Exception as e:
+            # Fallback to simulated data if API fails
+            return {
+                "total_trials": random.randint(200, 2000),
+                "active_trials": random.randint(100, 1000),
+                "completed_trials": random.randint(50, 500),
+                "recruiting_trials": random.randint(30, 300),
+                "trial_status_distribution": {
+                    "recruiting": random.randint(20, 200),
+                    "active_not_recruiting": random.randint(15, 150),
+                    "completed": random.randint(30, 300),
+                    "terminated": random.randint(5, 50),
+                    "suspended": random.randint(2, 20),
+                    "withdrawn": random.randint(3, 30)
+                },
+                "therapeutic_areas": {
+                    "breast_cancer": random.randint(50, 500),
+                    "ovarian_cancer": random.randint(30, 300),
+                    "cervical_cancer": random.randint(20, 200),
+                    "endometrial_cancer": random.randint(15, 150),
+                    "other_gynecological": random.randint(25, 250)
+                },
+                "intervention_types": {
+                    "drug": random.randint(100, 1000),
+                    "biological": random.randint(50, 500),
+                    "device": random.randint(20, 200),
+                    "procedure": random.randint(30, 300),
+                    "behavioral": random.randint(10, 100)
+                },
+                "data_source": "Simulated (API Error)",
+                "error": str(e)
+            }
     
     async def _analyze_sponsors(self, keywords: List[str], db: Session) -> Dict[str, Any]:
         """
