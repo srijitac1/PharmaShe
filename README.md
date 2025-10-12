@@ -6,7 +6,7 @@ PharmaShe is a forward-looking initiative by a leading multinational generic pha
 
 By leveraging approved molecules in new dosage forms or for underserved patient populations, PharmaShe aims to address unmet clinical needs with differentiated pharmaceutical offerings.
 
-## 🤖 Agentic AI System
+## Agentic AI System
 
 The platform is powered by an Agentic AI system designed to drastically reduce research time and improve decision-making efficiency for product planning and innovation teams.
 
@@ -27,7 +27,7 @@ The platform is powered by an Agentic AI system designed to drastically reduce r
 6. **Web Intelligence Agent**: Real-time scientific and regulatory research
 7. **Report Generator Agent**: Professional report creation
 
-##  Architecture
+## Architecture
 
 ```
 PharmaShe/
@@ -53,7 +53,7 @@ PharmaShe/
 └── docs/                   # Documentation
 ```
 
-
+## Quick Start
 
 1. **Clone and setup**:
    ```bash
@@ -87,7 +87,7 @@ npm install
 npm start
 ```
 
-# Features
+## Features
 
 - **Intelligent Research**: AI-powered analysis across multiple data sources
 - **Market Intelligence**: Real-time market trends and competitor analysis
@@ -111,6 +111,13 @@ Example queries the system can handle:
 - **Infrastructure**: Docker, Docker Compose
 - **APIs**: ClinicalTrials.gov, USPTO, IQVIA (simulated)
 
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
@@ -123,6 +130,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - React and Material-UI for the frontend
 - All contributors and testers
 
+## Contact
+
+- Project Maintainer: [Your Name]
+- Email: [your.email@example.com]
+- LinkedIn: [Your LinkedIn Profile]
 
 ---
 
