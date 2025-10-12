@@ -4,17 +4,20 @@ from typing import List, Optional
 from pydantic import BaseModel
 from app.core.database import get_db
 from app.models.models import Report
+from app.services.report_generators import ReportService
 import os
 import uuid
 from datetime import datetime
 
 router = APIRouter()
+report_service = ReportService()
 
 class ReportRequest(BaseModel):
     title: str
-    report_type: str  # pdf, excel, json
+    report_type: str  # pdf, excel, both
     session_id: Optional[int] = None
     template: Optional[str] = None
+    research_data: Optional[dict] = None
 
 class ReportResponse(BaseModel):
     id: int
@@ -30,42 +33,63 @@ async def generate_report(
     db: Session = Depends(get_db)
 ):
     """
-    Generate a new report
+    Generate a new report using the report service
     """
     try:
-        # Generate unique filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{report_request.title}_{timestamp}.{report_request.report_type}"
-        file_path = f"reports/{filename}"
+        # Prepare research data
+        research_data = report_request.research_data or {
+            "query": report_request.title,
+            "therapeutic_area": "Women's Oncology",
+            "market_size": 15000,
+            "growth_rate": 9.5,
+            "clinical_trials": {"trials": []},
+            "patents": {"patents": []},
+            "literature": {"articles": []},
+            "fda_data": {"drugs": []}
+        }
         
-        # Create report record
-        report = Report(
-            user_id=1,  # Default user for now
-            session_id=report_request.session_id,
-            title=report_request.title,
+        # Generate report using the report service
+        report_result = await report_service.generate_comprehensive_report(
+            research_data=research_data,
             report_type=report_request.report_type,
-            file_path=file_path,
-            metadata={
-                "template": report_request.template,
-                "generated_at": datetime.now().isoformat(),
-                "status": "generating"
-            }
+            filename_prefix=report_request.title.replace(" ", "_")
         )
-        db.add(report)
-        db.commit()
-        db.refresh(report)
         
-        # TODO: Implement actual report generation logic
-        # For now, we'll simulate the process
+        if "error" in report_result:
+            raise HTTPException(status_code=500, detail=report_result["error"])
         
-        return ReportResponse(
-            id=report.id,
-            title=report.title,
-            report_type=report.report_type,
-            file_path=report.file_path,
-            metadata=report.metadata,
-            created_at=report.created_at.isoformat()
-        )
+        # Create report record for the first generated file
+        first_file = report_result["files"][0] if report_result["files"] else None
+        if first_file:
+            report = Report(
+                user_id=1,  # Default user for now
+                session_id=report_request.session_id,
+                title=report_request.title,
+                report_type=first_file["type"],
+                file_path=first_file["path"],
+                metadata={
+                    "template": report_request.template,
+                    "generated_at": report_result["generated_at"],
+                    "status": "completed",
+                    "all_files": report_result["files"],
+                    "report_metadata": report_result["metadata"]
+                }
+            )
+            db.add(report)
+            db.commit()
+            db.refresh(report)
+            
+            return ReportResponse(
+                id=report.id,
+                title=report.title,
+                report_type=report.report_type,
+                file_path=report.file_path,
+                metadata=report.metadata,
+                created_at=report.created_at.isoformat()
+            )
+        else:
+            raise HTTPException(status_code=500, detail="No files generated")
+            
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

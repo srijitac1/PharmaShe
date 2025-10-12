@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import os
 
 from .base_agent import BaseAgent
+from ..report_generators import ReportService
 
 class ReportGeneratorAgent(BaseAgent):
     """
@@ -15,6 +16,7 @@ class ReportGeneratorAgent(BaseAgent):
     def __init__(self):
         super().__init__("report_generator")
         self.description = "Generates professional PDF and Excel reports"
+        self.report_service = ReportService()
     
     async def process_query(self, query: str, db: Session) -> Dict[str, Any]:
         """
@@ -23,21 +25,35 @@ class ReportGeneratorAgent(BaseAgent):
         try:
             keywords = self._extract_keywords(query)
             
-            # Generate different types of reports
+            # Determine report type from query
+            report_type = self._determine_report_type(query)
+            
+            # Generate comprehensive report using the report service
+            report_result = await self.report_service.generate_comprehensive_report(
+                research_data={
+                    "query": query,
+                    "therapeutic_area": self._extract_therapeutic_area(keywords),
+                    "drug_name": self._extract_drug_name(keywords),
+                    "clinical_trials": {"trials": []},  # Would be populated from other agents
+                    "patents": {"patents": []},  # Would be populated from other agents
+                    "literature": {"articles": []},  # Would be populated from other agents
+                    "fda_data": {"drugs": []},  # Would be populated from other agents
+                    "market_size": random.randint(10000, 20000),
+                    "growth_rate": random.uniform(8, 15)
+                },
+                report_type=report_type
+            )
+            
+            # Generate report options
             report_options = await self._generate_report_options(keywords, db)
-            pdf_report = await self._create_pdf_report(keywords, db)
-            excel_report = await self._create_excel_report(keywords, db)
-            executive_summary = await self._create_executive_summary(keywords, db)
             
             # Create summary
-            summary = self._create_report_summary(report_options, pdf_report, excel_report)
+            summary = self._create_report_summary(report_options, report_result)
             
             response_data = {
                 "report_options": report_options,
-                "pdf_report": pdf_report,
-                "excel_report": excel_report,
-                "executive_summary": executive_summary,
-                "key_insights": self._extract_report_insights(report_options, pdf_report, excel_report)
+                "generated_reports": report_result,
+                "key_insights": self._extract_report_insights(report_options, report_result)
             }
             
             return self._format_response(response_data, summary)
@@ -426,3 +442,38 @@ class ReportGeneratorAgent(BaseAgent):
         summary_parts.append(f"**Features:** {', '.join(features[:3])} and more")
         
         return "\n\n".join(summary_parts)
+    
+    def _determine_report_type(self, query: str) -> str:
+        """Determine report type from query"""
+        query_lower = query.lower()
+        
+        if "pdf" in query_lower:
+            return "pdf"
+        elif "excel" in query_lower or "spreadsheet" in query_lower:
+            return "excel"
+        elif "both" in query_lower or "comprehensive" in query_lower:
+            return "both"
+        else:
+            return "both"  # Default to both
+    
+    def _extract_therapeutic_area(self, keywords: List[str]) -> str:
+        """Extract therapeutic area from keywords"""
+        if any(kw in keywords for kw in ["breast", "cancer"]):
+            return "Breast Cancer"
+        elif any(kw in keywords for kw in ["ovarian", "cancer"]):
+            return "Ovarian Cancer"
+        elif any(kw in keywords for kw in ["cervical", "cancer"]):
+            return "Cervical Cancer"
+        elif any(kw in keywords for kw in ["endometrial", "cancer"]):
+            return "Endometrial Cancer"
+        else:
+            return "Women's Oncology"
+    
+    def _extract_drug_name(self, keywords: List[str]) -> Optional[str]:
+        """Extract drug name from keywords"""
+        # This would be more sophisticated in a real implementation
+        drug_keywords = ["trastuzumab", "pembrolizumab", "olaparib", "palbociclib"]
+        for keyword in keywords:
+            if keyword.lower() in drug_keywords:
+                return keyword.title()
+        return None
