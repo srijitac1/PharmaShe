@@ -121,21 +121,8 @@ Example queries the system can handle:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License
 
-## Acknowledgments
-
-- OpenAI for GPT-4 API
-- FastAPI for the backend framework
-- React and Material-UI for the frontend
-- All contributors and testers
-
-## Contact
-
-- Project Maintainer: [Your Name]
-- Email: [your.email@example.com]
-- LinkedIn: [Your LinkedIn Profile]
-
----
+---***-------***-------***-------***------
 
 **PharmaShe** - Empowering women's health through intelligent pharmaceutical research.
