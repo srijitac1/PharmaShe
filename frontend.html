@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaShe - Women-Centric Cancer Pharmaceutical Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background-color: #4CAF50;
+        }
+
+        .status-processing {
+            background-color: #FF9800;
+        }
+
+        .chat-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .chat-input button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            background: #5a6fd8;
+        }
+
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .message.user {
+            background: #e3f2fd;
+            margin-left: 20px;
+        }
+
+        .message.system {
+            background: #f3e5f5;
+            margin-right: 20px;
+        }
+
+        .message h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .api-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .api-status h3 {
+            color: #667eea;
+            margin: 0;
+        }
+
+        .api-status .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-input {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PharmaShe</h1>
+            <p>Women-Centric Cancer Pharmaceutical Platform</p>
+        </div>
+
+        <div class="api-status">
+            <h3>API Status</h3>
+            <div class="status">
+                <span class="status-indicator status-active"></span>
+                <span id="api-status-text">Connected</span>
+                <button class="btn btn-secondary" onclick="testAPI()">Test API</button>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h3>AI Agents Status</h3>
+                <div id="agents-status">
+                    <p><span class="status-indicator status-active"></span>Master Agent - Active</p>
+                    <p><span class="status-indicator status-active"></span>IQVIA Insights - Active</p>
+                    <p><span class="status-indicator status-active"></span>Patent Landscape - Active</p>
+                    <p><span class="status-indicator status-active"></span>Clinical Trials - Active</p>
+                    <p><span class="status-indicator status-active"></span>Report Generator - Active</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>External Integrations</h3>
+                <div id="integrations-status">
+                    <p><span class="status-indicator status-active"></span>ClinicalTrials.gov - Connected</p>
+                    <p><span class="status-indicator status-active"></span>USPTO - Connected</p>
+                    <p><span class="status-indicator status-active"></span>PubMed - Connected</p>
+                    <p><span class="status-indicator status-active"></span>FDA Drug API - Connected</p>
+                </div>
+                <button class="btn" onclick="testIntegrations()" style="margin-top: 15px;">Test Integrations</button>
+            </div>
+
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="btn" onclick="generateReport()">Generate Report</button>
+                    <button class="btn" onclick="runSampleQuery()">Sample Query</button>
+                    <button class="btn btn-secondary" onclick="viewAPI()">View API Docs</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <h3>Research Query Interface</h3>
+            <div class="chat-input">
+                <input type="text" id="query-input" placeholder="Ask about women's cancer market analysis, patent landscape, clinical trials..." 
+                       value="Which women's cancers show rising incidence but low drug development activity globally?">
+                <button onclick="sendQuery()">Send Query</button>
+            </div>
+            <div class="loading" id="loading">Processing your query...</div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message system">
+                    <h4>PharmaShe AI</h4>
+                    <p>Welcome to PharmaShe! I'm your AI research assistant specialized in women's oncology pharmaceutical research. I can help you analyze market trends, patent landscapes, clinical trials, and more. Try asking me about breast cancer market analysis or patent expiration opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        
+        async function testAPI() {
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                const data = await response.json();
+                document.getElementById('api-status-text').textContent = 'Connected';
+                addMessage('system', 'API Test', `API is running: ${data.message}`);
+            } catch (error) {
+                document.getElementById('api-status-text').textContent = 'Disconnected';
+                addMessage('system', 'API Test', 'Failed to connect to API');
+            }
+        }
+
+        async function testIntegrations() {
+            try {
+                const response = await fetch(`${API_BASE}/api/external/test-integrations`);
+                const data = await response.json();
+                addMessage('system', 'Integration Test', `All integrations tested successfully. Found ${data.results.clinical_trials.count} clinical trials, ${data.results.uspto.count} patents, ${data.results.pubmed.count} articles, and ${data.results.fda.count} FDA records.`);
+            } catch (error) {
+                addMessage('system', 'Integration Test', 'Failed to test integrations');
+            }
+        }
+
+        async function generateReport() {
+            try {
+                const response = await fetch(`${API_BASE}/api/reports/generate`);
+                const data = await response.json();
+                addMessage('system', 'Report Generation', `Report generation initiated. Report ID: ${data.report_id}. Estimated completion: ${data.estimated_completion}.`);
+            } catch (error) {
+                addMessage('system', 'Report Generation', 'Failed to generate report');
+            }
+        }
+
+        async function runSampleQuery() {
+            const query = "breast cancer market analysis";
+            document.getElementById('query-input').value = query;
+            await sendQuery();
+        }
+
+        async function sendQuery() {
+            const query = document.getElementById('query-input').value.trim();
+            if (!query) return;
+
+            addMessage('user', 'You', query);
+            document.getElementById('loading').classList.add('show');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/research/query?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                let responseText = `Query: "${data.query}"\n\n`;
+                responseText += `Status: ${data.status}\n`;
+                responseText += `Agents Involved: ${data.agents_involved.join(', ')}\n`;
+                responseText += `Estimated Time: ${data.estimated_time}\n\n`;
+                
+                if (data.results) {
+                    responseText += `Market Analysis:\n`;
+                    responseText += `- Market Size: ${data.results.market_analysis.market_size}\n`;
+                    responseText += `- Growth Rate: ${data.results.market_analysis.growth_rate}\n`;
+                    responseText += `- Key Players: ${data.results.market_analysis.key_players.join(', ')}\n\n`;
+                    
+                    responseText += `Patent Landscape:\n`;
+                    responseText += `- Total Patents: ${data.results.patent_landscape.total_patents.toLocaleString()}\n`;
+                    responseText += `- Active Patents: ${data.results.patent_landscape.active_patents.toLocaleString()}\n`;
+                    responseText += `- Expiring Soon: ${data.results.patent_landscape.expiring_soon}\n\n`;
+                    
+                    responseText += `Clinical Trials:\n`;
+                    responseText += `- Total Trials: ${data.results.clinical_trials.total_trials}\n`;
+                    responseText += `- Active Trials: ${data.results.clinical_trials.active_trials}\n`;
+                    responseText += `- Currently Recruiting: ${data.results.clinical_trials.recruiting}`;
+                }
+                
+                addMessage('system', 'PharmaShe AI', responseText);
+            } catch (error) {
+                addMessage('system', 'Error', 'Failed to process query. Please try again.');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+
+        function addMessage(type, sender, content) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = `<h4>${sender}</h4><p>${content.replace(/\n/g, '<br>')}</p>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function viewAPI() {
+            window.open(`${API_BASE}/docs`, '_blank');
+        }
+
+        // Test API connection on page load
+        window.onload = function() {
+            testAPI();
+        };
+
+        // Allow Enter key to send query
+        document.getElementById('query-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendQuery();
+            }
+        });
+    </script>
+</body>
+</html>
