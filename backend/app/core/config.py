@@ -1,16 +1,19 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 from typing import Optional
 import os
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "postgresql://pharmashe:pharmashe123@localhost:5432/pharmashe"
+    DATABASE_URL: str = "sqlite:///./pharmashe.db"
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
     
     # OpenAI
     OPENAI_API_KEY: Optional[str] = None
+    
+    # Gemini
+    GEMINI_API_KEY: Optional[str] = None
     
     # Security
     SECRET_KEY: str = "pharmashe-secret-key-change-in-production"

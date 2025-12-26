@@ -8,7 +8,9 @@ By leveraging approved molecules in new dosage forms or for underserved patient 
 
 ## Agentic AI System
 
-The platform is powered by an Agentic AI system designed to drastically reduce research time and improve decision-making efficiency for product planning and innovation teams.
+The platform is powered by an Agentic AI system designed to drastically reduce research time and improve decision-making efficiency for product planning and innovation teams by integrating RRF Formula and Google DeepSomatic for minimizing AI Hallucination.
+
+## Key Features
 
 ### Core Components
 
@@ -66,10 +68,28 @@ PharmaShe/
    docker-compose up -d
    ```
 
+   **Note for Vertex AI (Docker):**
+   To enable AI agents in Docker, you must pass your Google Cloud credentials:
+   1. Authenticate locally: `gcloud auth application-default login`
+   2. Update `docker-compose.yml` to map the credentials:
+      ```yaml
+      volumes:
+        - ${HOME}/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro
+      environment:
+        - GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json
+      ```
+
 3. **Access the application**:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - API Docs: http://localhost:8000/docs
+
+   **Research Dashboard (Streamlit):**
+   To launch the agentic workspace dashboard:
+   ```bash
+   cd backend
+   streamlit run streamlit_app.py
+   ```
 
 ## Development
 
@@ -107,9 +127,9 @@ Example queries the system can handle:
 
 - **Backend**: FastAPI, PostgreSQL, LangGraph, OpenAI
 - **Frontend**: React, TypeScript, Material-UI, Chart.js
-- **AI/ML**: LangChain, OpenAI GPT-4, Custom Agents
+- **AI/ML**: LangChain, OpenAI GPT-4, Google Vertex AI (Gemini), Custom Agents
 - **Infrastructure**: Docker, Docker Compose
-- **APIs**: ClinicalTrials.gov, USPTO, IQVIA (simulated)
+- **APIs**: ClinicalTrials.gov, USPTO, IQVIA (simulated), Google Vertex AI
 
 ## Contributing
 

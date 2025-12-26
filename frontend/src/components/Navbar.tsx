@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -16,9 +16,12 @@ import {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
 } from '@mui/icons-material';
+import { ThemeContext } from '../contexts/ThemeContext';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { toggleTheme, mode } = useContext(ThemeContext);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,13 +32,15 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" elevation={0} sx={{ bgcolor: 'white', color: 'text.primary' }}>
+    <AppBar position="static" elevation={0} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'primary.main' }}>
+        <Typography variant="h6" component="div" sx={{ color: 'primary.main' }}>
           PharmaShe
         </Typography>
+
+        <ThemeToggle onToggle={toggleTheme} isDarkMode={mode === 'dark'} />
         
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1, justifyContent: 'flex-end' }}>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="error">
               <NotificationsIcon />

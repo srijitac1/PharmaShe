@@ -84,6 +84,24 @@ async def get_agents():
                 "name": "Report Generator Agent",
                 "description": "Professional report creation",
                 "status": "active"
+            },
+            {
+                "id": "drug_interaction",
+                "name": "Drug Interaction Agent",
+                "description": "Analyzes drug-drug and drug-condition interactions",
+                "status": "active"
+            },
+            {
+                "id": "regulatory_compliance",
+                "name": "Regulatory Compliance Agent",
+                "description": "Checks FDA guidelines and compliance requirements",
+                "status": "active"
+            },
+            {
+                "id": "deep_research",
+                "name": "Deep Research Agent",
+                "description": "Multi-step genomic and IP analysis pipeline",
+                "status": "active"
             }
         ]
     }

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from pydantic import BaseModel
@@ -84,7 +85,7 @@ async def generate_report(
                 title=report.title,
                 report_type=report.report_type,
                 file_path=report.file_path,
-                metadata=report.metadata,
+                metadata=report.report_metadata,
                 created_at=report.created_at.isoformat()
             )
         else:
@@ -111,7 +112,7 @@ async def get_reports(
                 title=report.title,
                 report_type=report.report_type,
                 file_path=report.file_path,
-                metadata=report.metadata,
+                metadata=report.report_metadata,
                 created_at=report.created_at.isoformat()
             )
             for report in reports
@@ -137,7 +138,7 @@ async def get_report(
             title=report.title,
             report_type=report.report_type,
             file_path=report.file_path,
-            metadata=report.metadata,
+            metadata=report.report_metadata,
             created_at=report.created_at.isoformat()
         )
     except HTTPException:
@@ -157,13 +158,27 @@ async def download_report(
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
             raise HTTPException(status_code=404, detail="Report not found")
-        
+
         if not report.file_path or not os.path.exists(report.file_path):
             raise HTTPException(status_code=404, detail="Report file not found")
-        
-        # TODO: Implement actual file download logic
-        # For now, return the file path
-        return {"file_path": report.file_path, "download_url": f"/api/reports/download/{report_id}"}
+
+        # Determine media type based on file extension
+        file_extension = os.path.splitext(report.file_path)[1].lower()
+        if file_extension == '.pdf':
+            media_type = "application/pdf"
+        elif file_extension in ['.xlsx', '.xls']:
+            media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        else:
+            media_type = "application/octet-stream"
+
+        # Use report title as filename, replace spaces with underscores and add extension
+        filename = f"{report.title.replace(' ', '_')}{file_extension}"
+
+        return FileResponse(
+            path=report.file_path,
+            media_type=media_type,
+            filename=filename
+        )
     except HTTPException:
         raise
     except Exception as e:

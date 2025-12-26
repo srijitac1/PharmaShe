@@ -160,7 +160,7 @@ async def get_session_messages(
                 "id": message.id,
                 "role": message.role,
                 "content": message.content,
-                "metadata": message.metadata,
+                "metadata": message.message_metadata,
                 "created_at": message.created_at.isoformat()
             }
             for message in messages

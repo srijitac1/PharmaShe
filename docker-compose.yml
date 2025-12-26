@@ -44,6 +44,9 @@ services:
       - REDIS_URL=redis://redis:6379
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ENVIRONMENT=development
+      - GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json
+      - GOOGLE_CLOUD_PROJECT=gen-lang-client-0786690668
+      - GOOGLE_CLOUD_LOCATION=us-central1
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,6 +55,7 @@ services:
     volumes:
       - ./backend:/app
       - ./shared:/app/shared
+      - ${HOME}/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   # Frontend

@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 import uvicorn
@@ -8,6 +9,7 @@ from typing import List, Optional
 
 from app.core.config import settings
 from app.core.database import get_db, engine
+from app.core.responses import APIResponse
 from app.models import models
 from app.api import agents, research, reports, auth, external_apis
 from app.services.master_agent import MasterAgent
@@ -26,7 +28,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "null"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -47,15 +49,15 @@ app.include_router(external_apis.router, prefix="/api/external", tags=["External
 
 @app.get("/")
 async def root():
-    return {
+    return APIResponse.success({
         "message": "Welcome to PharmaShe API",
-        "version": "1.0.0",
+        "version": "1.0",
         "docs": "/docs"
-    }
+    })
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "PharmaShe API"}
+    return APIResponse.success({"status": "healthy", "service": "PharmaShe API"})
 
 @app.post("/api/chat")
 async def chat_endpoint(
@@ -75,12 +77,12 @@ async def chat_endpoint(
             background_tasks=background_tasks
         )
         
-        return {
-            "response": response,
-            "status": "success"
-        }
+        return APIResponse.success(response)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return JSONResponse(
+            status_code=500,
+            content=APIResponse.error(f"An unexpected error occurred: {str(e)}")
+        )
 
 if __name__ == "__main__":
     uvicorn.run(

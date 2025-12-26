@@ -9,6 +9,8 @@ from app.services.worker_agents.exim_agent import EXIMAgent
 from app.services.worker_agents.web_intelligence_agent import WebIntelligenceAgent
 from app.services.worker_agents.internal_knowledge_agent import InternalKnowledgeAgent
 from app.services.worker_agents.report_generator_agent import ReportGeneratorAgent
+from app.services.worker_agents.regulatory_compliance_agent import RegulatoryComplianceAgent
+from app.services.worker_agents.deep_research_agent import DeepResearchAgent
 
 router = APIRouter()
 
@@ -20,7 +22,9 @@ agents = {
     "exim": EXIMAgent(),
     "web_intelligence": WebIntelligenceAgent(),
     "internal_knowledge": InternalKnowledgeAgent(),
-    "report_generator": ReportGeneratorAgent()
+    "report_generator": ReportGeneratorAgent(),
+    "regulatory_compliance": RegulatoryComplianceAgent(),
+    "deep_research": DeepResearchAgent()
 }
 
 @router.get("/")

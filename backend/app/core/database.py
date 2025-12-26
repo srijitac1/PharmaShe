@@ -3,11 +3,17 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
+# Handle SQLite specific configuration
+connect_args = {}
+if "sqlite" in settings.DATABASE_URL:
+    connect_args["check_same_thread"] = False
+
 # Create database engine
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,
-    echo=settings.DEBUG
+    echo=settings.DEBUG,
+    connect_args=connect_args
 )
 
 # Create session factory
