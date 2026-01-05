@@ -1,0 +1,9 @@
+fastapi==0.95.2
+uvicorn[standard]==0.24.0
+pydantic==1.10.13
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+python-multipart==0.0.6
+requests==2.31.0
+reportlab==4.0.7
+openpyxl==3.1.2
