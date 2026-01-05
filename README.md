@@ -54,59 +54,6 @@ PharmaShe/
 ├── docker-compose.yml      # Development environment
 └── docs/                   # Documentation
 ```
-
-## Quick Start
-
-1. **Clone and setup**:
-   ```bash
-   git clone https://github.com/srijitac1/PharmaShe.git
-   cd PharmaShe
-   ```
-
-2. **Start with Docker**:
-   ```bash
-   docker-compose up -d
-   ```
-
-   **Note for Vertex AI (Docker):**
-   To enable AI agents in Docker, you must pass your Google Cloud credentials:
-   1. Authenticate locally: `gcloud auth application-default login`
-   2. Update `docker-compose.yml` to map the credentials:
-      ```yaml
-      volumes:
-        - ${HOME}/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro
-      environment:
-        - GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json
-      ```
-
-3. **Access the application**:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Docs: http://localhost:8000/docs
-
-   **Research Dashboard (Streamlit):**
-   To launch the agentic workspace dashboard:
-   ```bash
-   cd backend
-   streamlit run streamlit_app.py
-   ```
-
-## Development
-
-### Backend (FastAPI)
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-### Frontend (React)
-```bash
-cd frontend
-npm install
-npm start
-```
-
 ## Features
 
 - **Intelligent Research**: AI-powered analysis across multiple data sources
@@ -130,14 +77,6 @@ Example queries the system can handle:
 - **AI/ML**: LangChain, OpenAI GPT-4, Google Vertex AI (Gemini), Custom Agents
 - **Infrastructure**: Docker, Docker Compose
 - **APIs**: ClinicalTrials.gov, USPTO, IQVIA (simulated), Google Vertex AI
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## License
 
