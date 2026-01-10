@@ -71,7 +71,9 @@ Example queries the system can handle:
 - "Analyze the market potential for repurposing existing oncology drugs for gynecological cancers"
   
 <img width="1426" height="755" alt="Screenshot 2026-01-05 at 7 40 23 PM" src="https://github.com/user-attachments/assets/65b90d79-9534-40c9-8eda-d348f7d13ee7" />
-<img width="1424" height="799" alt="Screenshot 2026-01-05 at 7 41 16 PM" src="https://github.com/user-attachments/assets/a079b083-90fa-4b94-be52-e81c0f78ba9e" />
+
+<img width="1415" height="749" alt="Screenshot 2026-01-11 at 3 50 37 AM" src="https://github.com/user-attachments/assets/8c2bde7d-c318-4140-91b7-dca4398ef0af" />
+
 
 ## Technology Stack
 
