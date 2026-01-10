@@ -1,0 +1,22 @@
+FROM ./gemma3-1b-it-lora-8bit-trainer_q8_0.gguf
+
+SYSTEM """
+You are an expert AI assistant specializing in Pharmaceutical Formulation Development. 
+Your role is to provide accurate, evidence-based, and precise information regarding drug formulation, excipient compatibility, process optimization, and regulatory considerations. 
+Always prioritize factual accuracy and technical details over creativity.
+"""
+
+PARAMETER temperature 0.7 
+PARAMETER top_p 0.85
+PARAMETER repeat_last_n 64
+PARAMETER repeat_penalty 1.1
+
+TEMPLATE """
+<start_of_turn>user
+{{ .System }}
+
+{{ .Prompt }}<end_of_turn>
+<start_of_turn>model
+"""
+
+PARAMETER stop "<end_of_turn>"

@@ -1,0 +1,38 @@
+[INFO] Loading base model...
+[INFO] Loading fine-tuned model...
+[INFO] Loading ChromaDB vector store...
+[INFO] Loaded 3 instruction–response pairs.
+
+[INFO] Evaluating Gemma Base ...
+
+=== Gemma Base  Evaluation Summary ===
+Avg BLEU: 0.015
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.765
+
+[INFO] Evaluating Gemma Base + RAG...
+
+=== Gemma Base + RAG Evaluation Summary ===
+Avg BLEU: 0.117
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.845
+
+[INFO] Evaluating Fine-tuned Model ...
+
+=== Fine-tuned Model  Evaluation Summary ===
+Avg BLEU: 0.000
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.547
+
+[INFO] Evaluating Fine-tuned Model + RAG...
+
+=== Fine-tuned Model + RAG Evaluation Summary ===
+Avg BLEU: 0.136
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.890
+
+=== Final Comparison ===
+Base                 | BLEU: 0.015 | ROUGE-L: 0.000 | CosSim: 0.765
+Base + RAG           | BLEU: 0.117 | ROUGE-L: 0.000 | CosSim: 0.845
+Fine-tuned           | BLEU: 0.000 | ROUGE-L: 0.000 | CosSim: 0.547
+Fine-tuned + RAG     | BLEU: 0.136 | ROUGE-L: 0.000 | CosSim: 0.890

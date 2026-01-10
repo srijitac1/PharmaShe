@@ -1,0 +1,54 @@
+[INFO] Loading base model...
+[INFO] Loading fine-tuned model...
+[INFO] Loading ChromaDB vector store...
+[INFO] Loaded 908 instruction–response pairs.
+
+[INFO] Evaluating Gemma Base ...
+
+=== Gemma Base  Evaluation Summary ===
+Avg BLEU: 0.029
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.807
+Avg Precision: 0.104
+Avg Recall: 0.225
+Top-K Accuracy: 0.034
+Avg Perplexity: 3.68
+
+[INFO] Evaluating Gemma Base + RAG...
+
+=== Gemma Base + RAG Evaluation Summary ===
+Avg BLEU: 0.013
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.795
+Avg Precision: 0.060
+Avg Recall: 0.119
+Top-K Accuracy: 0.012
+Avg Perplexity: 4.13
+
+[INFO] Evaluating Fine-tuned Model ...
+
+=== Fine-tuned Model  Evaluation Summary ===
+Avg BLEU: 0.001
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.020
+Avg Precision: 0.007
+Avg Recall: 0.005
+Top-K Accuracy: 0.020
+Avg Perplexity: inf
+
+[INFO] Evaluating Fine-tuned Model + RAG...
+
+=== Fine-tuned Model + RAG Evaluation Summary ===
+Avg BLEU: 0.106
+Avg ROUGE-L: 0.000
+Avg Cosine Similarity: 0.912
+Avg Precision: 0.445
+Avg Recall: 0.346
+Top-K Accuracy: 0.861
+Avg Perplexity: 13.53
+
+=== Final Comparison ===
+Base                 | BLEU: 0.029 | ROUGE-L: 0.000 | CosSim: 0.807 | P: 0.104 | R: 0.225 | TopK: 0.034 | PPL: 3.68
+Base + RAG           | BLEU: 0.013 | ROUGE-L: 0.000 | CosSim: 0.795 | P: 0.060 | R: 0.119 | TopK: 0.012 | PPL: 4.13
+Fine-tuned           | BLEU: 0.001 | ROUGE-L: 0.000 | CosSim: 0.020 | P: 0.007 | R: 0.005 | TopK: 0.020 | PPL: inf
+Fine-tuned + RAG     | BLEU: 0.106 | ROUGE-L: 0.000 | CosSim: 0.912 | P: 0.445 | R: 0.346 | TopK: 0.861 | PPL: 13.53

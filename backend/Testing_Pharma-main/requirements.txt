@@ -1,0 +1,12 @@
+numpy
+pandas
+scikit-learn
+tensorflow
+transformers
+accelerate
+langchain
+chromadb
+ollama
+jupyter
+ipykernel
+

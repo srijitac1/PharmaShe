@@ -1,0 +1,9 @@
+tar -tvzf updatefiles_5k.tar.gz | grep -E ' [1-9][0-9]{4,} ' | wc -l
+6726
+
+tar -tvzf updatefiles_5k.tar.gz | grep -E ' [1-9][0-9]{4,} ' | awk '{print $NF}' | xargs -r tar -xzf updatefiles_5k.tar.gz
+
+tar -tvzf baseline_5k.tar.gz | grep -E ' [1-9][0-9]{4,} ' | wc -l
+7622
+
+tar -tvzf baseline_5k.tar.gz | grep -E ' [1-9][0-9]{4,} ' | awk '{print $NF}' | xargs -r tar -xzf baseline_5k.tar.gz
