@@ -1,6 +1,6 @@
 # PharmaShe - Women-Centric Cancer Pharmaceutical Platform
 
-PharmaShe is a forward-looking initiative by a leading multinational generic pharmaceutical company aiming to go beyond the competitive and low-margin generics market. The platform focuses on women's health, especially in cancer care, with the goal of identifying novel, high-value therapies through drug repurposing and indication expansion, integrating RRF Formula (to deal with AI Hallucination) + DeepSomatic Concept (as it is focused on Cancer research) .
+PharmaShe focuses on women's health, especially in cancer care, with the goal of identifying novel, high-value therapies through drug repurposing and indication expansion, integrating RRF Formula (to deal with AI Hallucination) 
 
 ## Mission
 
@@ -82,6 +82,8 @@ Example queries the system can handle:
 ## License
 
 This project is licensed under the MIT License
+
+(use Create account option, currently google sign in function not working)
 
 ---***-------***-------***-------***------
 
