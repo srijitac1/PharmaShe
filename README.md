@@ -1,5 +1,3 @@
-**(use Create account option, currently google sign in function not working)**
-
 # PharmaShe - Women-Centric Cancer Pharmaceutical Platform
 
 PharmaShe focuses on women's health, especially in cancer care, with the goal of identifying novel, high-value therapies through drug repurposing and indication expansion, integrating RRF Formula (to deal with AI Hallucination) 
